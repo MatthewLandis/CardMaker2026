@@ -1,14 +1,16 @@
 // ----- Theme -----
 :root {
   color-scheme: dark;
-  --bg: #121116;
-  --surface: #1b1a21;
-  --surface-2: #26242e;
-  --border: #34313d;
-  --text: #f1eff5;
-  --muted: #a5a1b0;
-  --accent: #d9a53f;
-  --accent-text: #1b1405;
+  --bg: #0d1424;
+  --surface: #131d33;
+  --surface-2: #1c2a47;
+  --border: #2a3b5e;
+  --text: #eef3ff;
+  --muted: #9aaacb;
+  --accent: #2f6fe0; // buttons and highlights
+  --accent-text: #ffffff; // text on top of --accent
+  --accent-light: #7cb2ff; // accent-colored text on the dark background
+  --glow: #1e3466; // light behind the card preview
   --danger: #e5604f;
   --radius: 8px;
 }

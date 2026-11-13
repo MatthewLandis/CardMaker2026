@@ -46,7 +46,7 @@ import { AuthService, errorMessage } from './auth.service';
     label { display: flex; flex-direction: column; gap: 0.35rem; }
     label span { font-weight: 600; font-size: 0.9rem; color: var(--muted); }
     .muted { color: var(--muted); }
-    .link { background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0.25rem; }
+    .link { background: none; border: 0; color: var(--accent-light); cursor: pointer; padding: 0.25rem; }
     .link:hover { text-decoration: underline; }
   `,
 })
