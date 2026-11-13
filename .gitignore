@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.angular/
+.vs/
+.vscode/*
+!.vscode/extensions.json
+.env
+backend/data/
+*.log

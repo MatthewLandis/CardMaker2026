@@ -1,0 +1,9 @@
+{
+  "name": "card-maker-2026",
+  "private": true,
+  "description": "Builds the Angular site and starts the server that hosts it (used for deployment).",
+  "scripts": {
+    "build": "npm ci --prefix frontend && npm run build --prefix frontend && npm ci --omit=dev --prefix backend",
+    "start": "npm start --prefix backend"
+  }
+}

@@ -1,0 +1,19 @@
+<header class="topbar">
+  <a class="brand" routerLink="/">Card<span>Maker</span></a>
+  <nav>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Create</a>
+    <a routerLink="/cards" routerLinkActive="active">My cards</a>
+  </nav>
+  <div class="account">
+    @if (auth.username(); as username) {
+      <span class="user">{{ username }}</span>
+      <button class="btn ghost" (click)="auth.logout()">Log out</button>
+    } @else {
+      <a class="btn" routerLink="/login">Log in</a>
+    }
+  </div>
+</header>
+
+<main>
+  <router-outlet />
+</main>

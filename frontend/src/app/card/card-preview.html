@@ -1,0 +1,80 @@
+@let c = card();
+<div class="card" #cardEl>
+  <!-- Art sits underneath the frame, which has a transparent window -->
+  <img
+    class="art"
+    [class.pendulumArt]="pendulum()"
+    [src]="c.art || 'assets/placeholderArt.jpg'"
+    alt=""
+  />
+  <img class="layer" [src]="'assets/CardTemplates/' + c.frame + '.png'" alt="" />
+
+  @if (pendulum()) {
+    <img
+      class="layer"
+      [src]="'assets/CardTemplates/PendulumTemplates/PendulumShade/Pendulum' + c.frame + '.png'"
+      alt=""
+    />
+    <img class="layer" src="assets/CardTemplates/PendulumTemplates/PendulumTemplate.png" alt="" />
+    <div class="scale left">{{ c.leftScale }}</div>
+    <div class="scale right">{{ c.rightScale }}</div>
+    <div class="pendulumText" #pendulumTextEl>{{ c.pendulumText }}</div>
+  }
+
+  @if (monster()) {
+    <img class="layer" [src]="'assets/attributes/' + c.attribute + '.png'" alt="" />
+    @switch (stars()) {
+      @case ('level') {
+        <img class="layer" [src]="'assets/levels/level' + c.stars + '.png'" alt="" />
+      }
+      @case ('rank') {
+        <img class="layer" [src]="'assets/ranks/rank' + c.stars + '.png'" alt="" />
+      }
+      @case ('negativeLevel') {
+        <img class="layer" [src]="'assets/negativeLevels/nLevel' + c.stars + '.png'" alt="" />
+      }
+    }
+    @if (c.frame === 'Link') {
+      @for (arrow of arrows(); track arrow) {
+        <img class="layer" [src]="'assets/linkArrows/' + arrow + '.png'" alt="" />
+      }
+    }
+  }
+  @if (c.frame === 'Spell') {
+    <img class="layer" [src]="'assets/spellTypes/' + c.spellType + '.png'" alt="" />
+  }
+  @if (c.frame === 'Trap') {
+    <img class="layer" [src]="'assets/trapTypes/' + c.trapType + '.png'" alt="" />
+  }
+
+  <div class="nameBox">
+    <span class="name {{ c.rarity }}" #nameEl>{{ c.name }}</span>
+  </div>
+
+  @if (monster()) {
+    <div class="typeLine" #typeEl>
+      <span class="bracket">[</span>
+      @for (part of typeParts(); track $index) {
+        @if (!$first) {
+          <span class="slash">/</span>
+        }
+        <span>{{ part }}</span>
+      }
+      <span class="bracket">]</span>
+    </div>
+
+    <div class="stat atk" #atkEl>{{ c.atk }}</div>
+    @if (showDef()) {
+      <div class="stat def" #defEl>{{ c.def }}</div>
+    } @else {
+      <div class="linkRating">{{ c.linkArrows.length }}</div>
+    }
+  }
+
+  <div
+    class="text"
+    #textEl
+    [class.monsterText]="monster()"
+    [class.flavor]="flavorText()"
+  >{{ c.text }}</div>
+</div>

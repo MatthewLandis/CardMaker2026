@@ -1,0 +1,156 @@
+// ----- Theme -----
+:root {
+  color-scheme: dark;
+  --bg: #121116;
+  --surface: #1b1a21;
+  --surface-2: #26242e;
+  --border: #34313d;
+  --text: #f1eff5;
+  --muted: #a5a1b0;
+  --accent: #d9a53f;
+  --accent-text: #1b1405;
+  --danger: #e5604f;
+  --radius: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+// ----- Shared controls -----
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  &.ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border);
+
+    &:hover:not(:disabled) {
+      background: var(--surface-2);
+      filter: none;
+    }
+  }
+
+  &.danger {
+    background: transparent;
+    color: var(--danger);
+    border-color: var(--border);
+
+    &:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--danger) 15%, transparent);
+      filter: none;
+    }
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+
+  &:focus {
+    border-color: var(--accent);
+    outline: none;
+  }
+}
+
+textarea.input {
+  resize: vertical;
+  min-height: 5rem;
+  line-height: 1.4;
+}
+
+.error {
+  color: var(--danger);
+}
+
+// ----- Card fonts (from the original CardMaker) -----
+@font-face {
+  font-family: 'ATKDEF';
+  src: url('/fonts/MatrixBoldSmallCaps.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'title';
+  src: url('/fonts/MatrixRegularSmallCaps.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'monstertype';
+  src: url('/fonts/monsterType.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'lore';
+  src: url('/fonts/lore.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'pendulum';
+  src: url('/fonts/MatrixBoldFractions.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'effect';
+  src: url('/fonts/MatrixBook.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'linkRating';
+  src: url('/fonts/RoGSanSrfStd-UB.otf') format('opentype');
+}

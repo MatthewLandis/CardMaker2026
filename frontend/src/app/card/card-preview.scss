@@ -1,0 +1,207 @@
+// All positions are in pixels on the full-size 813x1185 card.
+:host {
+  display: block;
+}
+
+.card {
+  position: relative;
+  width: 813px;
+  height: 1185px;
+  overflow: hidden;
+  color: #000;
+  transform-origin: top left;
+  transform: scale(var(--card-scale, 1));
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.art {
+  position: absolute;
+  top: 219px;
+  left: 100px;
+  width: 613px;
+  height: 613px;
+  object-fit: cover;
+
+  &.pendulumArt {
+    top: 212px;
+    left: 55px;
+    width: 702px;
+    height: 702px;
+  }
+}
+
+// ----- Name -----
+.nameBox {
+  position: absolute;
+  top: 62px;
+  left: 62px;
+  width: 616px;
+  height: 72px;
+  white-space: nowrap;
+}
+
+.name {
+  display: inline-block;
+  font-family: title;
+  font-size: 88px;
+  line-height: 72px;
+  letter-spacing: 1px;
+  transform-origin: left center;
+}
+
+.Common {
+  color: #000;
+}
+
+.Rare {
+  color: #fff;
+}
+
+$outline: drop-shadow(-0.7px 0 rgba(0, 0, 0, 0.5)) drop-shadow(0.7px 0 rgba(0, 0, 0, 0.5))
+  drop-shadow(0 -0.7px rgba(0, 0, 0, 0.5)) drop-shadow(0 0.7px rgba(0, 0, 0, 0.5))
+  drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+
+@mixin foil($gradient) {
+  background-image: $gradient;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: $outline;
+}
+
+.Ultra-Rare {
+  @include foil(linear-gradient(#fff211 35%, #fffff8 40%, #fff211 55%, #bd920f 53%, #f7ce1e 70%));
+}
+
+.Secret-Rare {
+  @include foil(linear-gradient(#e8e8e8 35%, #ffffff 40%, #d6d6d6 55%, #8f8f8f 53%, #cfcfcf 70%));
+}
+
+.Barian {
+  @include foil(linear-gradient(#ff3b6a 35%, #ffb6d5 40%, #ff3b6a 48%, #b8004c 53%, #ff5eae 70%));
+}
+
+.Skills {
+  color: #fff;
+  filter: drop-shadow(-0.7px 0 rgba(0, 0, 0, 0.8)) drop-shadow(0.7px 0 rgba(0, 0, 0, 0.8))
+    drop-shadow(0 -0.7px rgba(0, 0, 0, 0.8)) drop-shadow(0 0.7px rgba(0, 0, 0, 0.8));
+}
+
+// ----- Monster type line, e.g. [Dragon/Synchro/Effect] -----
+.typeLine {
+  position: absolute;
+  top: 882px;
+  left: 60px;
+  font-family: monstertype;
+  font-size: 33px;
+  line-height: 1.2;
+  white-space: nowrap;
+  transform-origin: left;
+
+  .bracket,
+  .slash {
+    position: relative;
+    font-size: 30px;
+    padding: 0 2px;
+  }
+
+  .bracket {
+    bottom: 2px;
+  }
+}
+
+// ----- Text boxes -----
+.text {
+  position: absolute;
+  top: 892px;
+  left: 64px;
+  width: 686px;
+  height: 190px;
+  font-family: effect;
+  line-height: 0.95;
+  text-align: justify;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow: hidden;
+
+  &.monsterText {
+    top: 922px;
+    height: 157px;
+  }
+
+  &.flavor {
+    font-family: lore;
+    line-height: 1;
+  }
+}
+
+.pendulumText {
+  position: absolute;
+  top: 745px;
+  left: 126px;
+  width: 559px;
+  height: 120px;
+  font-family: effect;
+  line-height: 1;
+  text-align: justify;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow: hidden;
+}
+
+.scale {
+  position: absolute;
+  top: 791px;
+  width: 71px;
+  font-family: pendulum;
+  font-size: 69px;
+  letter-spacing: -6px;
+  text-align: center;
+
+  &.left {
+    left: 55px;
+  }
+
+  &.right {
+    left: 690px;
+  }
+}
+
+// ----- ATK / DEF / Link rating -----
+.stat {
+  position: absolute;
+  top: 1083px;
+  width: 80px;
+  font-family: ATKDEF;
+  font-size: 36px;
+  letter-spacing: 0.4px;
+  text-align: right;
+  white-space: nowrap;
+  transform-origin: right;
+
+  &.atk {
+    left: 505px;
+  }
+
+  &.def {
+    left: 665px;
+  }
+}
+
+.linkRating {
+  position: absolute;
+  top: 1078px;
+  right: 50px;
+  width: 35px;
+  font-family: linkRating;
+  font-size: 20px;
+  text-align: center;
+  transform: scaleY(1.3) scaleX(1.7);
+}

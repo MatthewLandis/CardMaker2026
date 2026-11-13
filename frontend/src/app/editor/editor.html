@@ -1,0 +1,256 @@
+@let c = card();
+<div class="editor">
+  <!-- Live preview -->
+  <section class="previewPane" (dragover)="$event.preventDefault()" (drop)="onDrop($event)">
+    <div class="stage" #stage>
+      <div
+        class="frame"
+        [style.width.px]="CARD_WIDTH * previewScale()"
+        [style.height.px]="CARD_HEIGHT * previewScale()"
+        [style.--card-scale]="previewScale()"
+      >
+        <app-card-preview [card]="c" />
+      </div>
+    </div>
+    <p class="hint">Tip: drop an image on the card to use it as the art.</p>
+  </section>
+
+  <!-- Controls -->
+  <aside class="panel">
+    <div class="actions">
+      <button class="btn" (click)="save()" [disabled]="busy()">
+        {{ busy() === 'saving' ? 'Saving…' : savedId() ? 'Save changes' : 'Save card' }}
+      </button>
+      <button class="btn ghost" (click)="download()" [disabled]="busy()">
+        {{ busy() === 'exporting' ? 'Creating…' : 'Download PNG' }}
+      </button>
+      <span class="spacer"></span>
+      @if (savedId()) {
+        <button class="btn ghost" (click)="save(true)" [disabled]="busy()">Save as copy</button>
+      }
+      <button class="btn ghost" (click)="startNew()" [disabled]="busy()">New</button>
+    </div>
+    <p class="status" [class.error]="status()?.error" aria-live="polite">
+      @if (busy() === 'loading') {
+        Loading card…
+      } @else if (status(); as s) {
+        {{ s.text }}
+      } @else if (!auth.loggedIn()) {
+        <a routerLink="/login" [queryParams]="{ next: '/' }">Log in</a> to save cards to your collection.
+      } @else if (dirty() && savedId()) {
+        Unsaved changes
+      }
+    </p>
+
+    <fieldset>
+      <legend>Card</legend>
+      <label class="field">
+        <span>Name</span>
+        <input class="input" [value]="c.name" (input)="set('name', value($event))" maxlength="100" />
+      </label>
+      <label class="field">
+        <span>Name style</span>
+        <select class="input" (change)="set('rarity', $any(value($event)))">
+          @for (r of rarities; track r.id) {
+            <option [value]="r.id" [selected]="c.rarity === r.id">{{ r.label }}</option>
+          }
+        </select>
+      </label>
+      <div class="field">
+        <span>Frame</span>
+        <div class="frames">
+          @for (f of frames; track f) {
+            <button
+              class="frameBtn"
+              [class.selected]="c.frame === f"
+              [style.--swatch]="frameColors[f]"
+              (click)="setFrame(f)"
+            >
+              {{ f }}
+            </button>
+          }
+        </div>
+      </div>
+      <div class="field">
+        <span>Art</span>
+        <div class="row">
+          <label class="btn ghost fileBtn">
+            Upload image
+            <input type="file" accept="image/*" (change)="onArtSelected($event)" />
+          </label>
+          @if (c.art) {
+            <button class="btn danger" (click)="set('art', '')">Remove</button>
+          }
+        </div>
+      </div>
+    </fieldset>
+
+    @if (monster()) {
+      <fieldset>
+        <legend>Monster</legend>
+        <div class="field">
+          <span>Attribute</span>
+          <div class="attributes">
+            @for (a of attributes; track a) {
+              <button
+                class="attributeBtn"
+                [class.selected]="c.attribute === a"
+                [style.background-image]="'url(assets/attributes/' + a + '.png)'"
+                [attr.aria-label]="a"
+                [title]="a"
+                (click)="set('attribute', a)"
+              ></button>
+            }
+          </div>
+        </div>
+
+        @if (stars() !== 'none') {
+          <div class="field">
+            <span>{{ starLabel() }}</span>
+            <div class="stars">
+              @for (n of starValues; track n) {
+                <button [class.selected]="c.stars === n" (click)="set('stars', n)">{{ n }}</button>
+              }
+            </div>
+          </div>
+        }
+
+        @if (c.frame === 'Link') {
+          <div class="field">
+            <span>Link arrows <small>(Link rating: {{ c.linkArrows.length }})</small></span>
+            <div class="arrows">
+              @for (arrow of arrowGrid; track $index) {
+                @if (arrow) {
+                  <button
+                    class="arrow {{ arrow }}"
+                    [class.selected]="c.linkArrows.includes(arrow)"
+                    [attr.aria-label]="arrow"
+                    (click)="toggleArrow(arrow)"
+                  >
+                    ▲
+                  </button>
+                } @else {
+                  <span></span>
+                }
+              }
+            </div>
+          </div>
+        }
+
+        <div class="cols">
+          <label class="field">
+            <span>Type</span>
+            <select class="input" (change)="set('monsterType', value($event))">
+              @for (t of monsterTypes; track t) {
+                <option [value]="t" [selected]="c.monsterType === t">{{ t }}</option>
+              }
+            </select>
+          </label>
+          @if (effectOptional()) {
+            <label class="check">
+              <input type="checkbox" [checked]="c.isEffect" (change)="set('isEffect', !c.isEffect)" />
+              Effect monster
+            </label>
+          }
+        </div>
+
+        <div class="field">
+          <span>Abilities</span>
+          <div class="chips">
+            @for (a of abilities; track a) {
+              <button [class.selected]="c.abilities.includes(a)" (click)="toggleAbility(a)">{{ a }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="cols">
+          <label class="field">
+            <span>ATK</span>
+            <input class="input" [value]="c.atk" (input)="set('atk', value($event))" maxlength="5" />
+          </label>
+          @if (showDef()) {
+            <label class="field">
+              <span>DEF</span>
+              <input class="input" [value]="c.def" (input)="set('def', value($event))" maxlength="5" />
+            </label>
+          }
+        </div>
+
+        @if (pendulumAllowed()) {
+          <label class="check">
+            <input type="checkbox" [checked]="c.pendulum" (change)="set('pendulum', !c.pendulum)" />
+            Pendulum monster
+          </label>
+          @if (c.pendulum) {
+            <div class="cols">
+              <label class="field">
+                <span>Left scale</span>
+                <input
+                  class="input"
+                  type="number"
+                  min="0"
+                  max="13"
+                  [value]="c.leftScale"
+                  (input)="set('leftScale', numberValue($event, 13))"
+                />
+              </label>
+              <label class="field">
+                <span>Right scale</span>
+                <input
+                  class="input"
+                  type="number"
+                  min="0"
+                  max="13"
+                  [value]="c.rightScale"
+                  (input)="set('rightScale', numberValue($event, 13))"
+                />
+              </label>
+            </div>
+            <label class="field">
+              <span>Pendulum effect</span>
+              <textarea
+                class="input"
+                rows="3"
+                [value]="c.pendulumText"
+                (input)="set('pendulumText', value($event))"
+              ></textarea>
+            </label>
+          }
+        }
+      </fieldset>
+    }
+
+    @if (c.frame === 'Spell') {
+      <fieldset>
+        <legend>Spell type</legend>
+        <div class="chips">
+          @for (t of spellTypes; track t) {
+            <button [class.selected]="c.spellType === t" (click)="set('spellType', t)">{{ t }}</button>
+          }
+        </div>
+      </fieldset>
+    }
+    @if (c.frame === 'Trap') {
+      <fieldset>
+        <legend>Trap type</legend>
+        <div class="chips">
+          @for (t of trapTypes; track t) {
+            <button [class.selected]="c.trapType === t" (click)="set('trapType', t)">{{ t }}</button>
+          }
+        </div>
+      </fieldset>
+    }
+
+    <fieldset>
+      <legend>{{ textLabel() }}</legend>
+      <textarea
+        class="input"
+        rows="6"
+        [value]="c.text"
+        (input)="set('text', value($event))"
+        aria-label="Card text"
+      ></textarea>
+      <small class="muted">Long text automatically shrinks to fit the card.</small>
+    </fieldset>
+  </aside>
+</div>
